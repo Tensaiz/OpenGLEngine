@@ -1,5 +1,6 @@
 package engineTester;
 
+import renderEngine.Sync;
 import entities.Entity;
 import models.TexturedModel;
 import org.joml.Vector3f;
@@ -48,6 +49,8 @@ public class MainGameLoop {
 
         Entity entity = new Entity(staticModel, new Vector3f(-1, 0, 0), 0,0,0,1);
 
+        Sync sync = new Sync();
+
         while(!DisplayManager.closed()) {
             DisplayManager.updateDisplayBuffers();
 
@@ -59,6 +62,10 @@ public class MainGameLoop {
             shader.start();
             renderer.render(entity, shader);
             shader.stop();
+
+            // FPS sync
+            sync.sync(144);
+
             // render
             DisplayManager.updateDisplayEvents();
         }
