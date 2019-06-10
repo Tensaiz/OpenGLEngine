@@ -46,4 +46,20 @@ public class DisplayManager {
         return GLFW.glfwWindowShouldClose(window);
     }
 
+    public static long getWindow() {
+        return window;
+    }
+
+    public static String getTitle() {
+        return TITLE;
+    }
+
+    public static int getWidth() {
+        return WIDTH;
+    }
+
+    public static int getHeight() {
+        return HEIGHT;
+    }
+
 }

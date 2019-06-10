@@ -1,13 +1,11 @@
 package engineTester;
 
-import renderEngine.Sync;
+import entities.Camera;
+import renderEngine.*;
 import entities.Entity;
 import models.TexturedModel;
 import org.joml.Vector3f;
-import renderEngine.DisplayManager;
-import renderEngine.Loader;
 import models.RawModel;
-import renderEngine.Renderer;
 import shaders.StaticShader;
 import textures.ModelTexture;
 
@@ -20,46 +18,28 @@ public class MainGameLoop {
         DisplayManager.createDisplay();
 
         Loader loader = new Loader();
-        Renderer renderer = new Renderer();
         StaticShader shader = new StaticShader();
+        Renderer renderer = new Renderer(shader);
 
-
-        float[] vertices = {
-                -0.5f, 0.5f, 0,
-                -0.5f, -0.5f, 0,
-                0.5f, -0.5f, 0,
-                0.5f, 0.5f, 0
-        };
-
-        int[] indices = {
-                0,1,3,
-                3,1,2
-        };
-
-        float[] textureCoords = {
-                0,0,
-                0,1,
-                1,1,
-                1,0,
-        };
-
-        RawModel model = loader.loadToVAO(vertices, textureCoords, indices);
-        ModelTexture texture = new ModelTexture(loader.loadTexture("image"));
+        RawModel model = OBJLoader.loadObjModel("stall", loader);
+        ModelTexture texture = new ModelTexture(loader.loadTexture("stallTexture"));
         TexturedModel staticModel = new TexturedModel(model, texture);
 
-        Entity entity = new Entity(staticModel, new Vector3f(-1, 0, 0), 0,0,0,1);
+        Entity entity = new Entity(staticModel, new Vector3f(0, 0, -50), 0,0,0,1);
+
+        Camera camera = new Camera();
 
         Sync sync = new Sync();
 
         while(!DisplayManager.closed()) {
             DisplayManager.updateDisplayBuffers();
 
-            entity.increasePosition(0.002f, 0, 0);
-            entity.increaseRotation(0, 1, 0);
-
+            entity.increaseRotation(0, 0.5f, 0);
+            camera.move();
             renderer.prepare();
             // game logic
             shader.start();
+            shader.loadViewMatrix(camera);
             renderer.render(entity, shader);
             shader.stop();
 
