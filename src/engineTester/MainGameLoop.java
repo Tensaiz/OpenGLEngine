@@ -1,6 +1,7 @@
 package engineTester;
 
 import entities.Camera;
+import entities.Light;
 import renderEngine.*;
 import entities.Entity;
 import models.TexturedModel;
@@ -21,11 +22,15 @@ public class MainGameLoop {
         StaticShader shader = new StaticShader();
         Renderer renderer = new Renderer(shader);
 
-        RawModel model = OBJLoader.loadObjModel("stall", loader);
-        ModelTexture texture = new ModelTexture(loader.loadTexture("stallTexture"));
-        TexturedModel staticModel = new TexturedModel(model, texture);
+        RawModel model = OBJLoader.loadObjModel("dragon", loader);
+        TexturedModel staticModel = new TexturedModel(model, new ModelTexture(loader.loadTexture("white")));
+        ModelTexture texture = staticModel.getTexture();
+        texture.setShineDamper(10);
+        texture.setReflectivity(1);
 
-        Entity entity = new Entity(staticModel, new Vector3f(0, 0, -50), 0,0,0,1);
+        Entity entity = new Entity(staticModel, new Vector3f(0, -5, -25), 0,0,0,1);
+        Light light = new Light(new Vector3f(0,-5, -15), new Vector3f(1, 1, 1));
+
 
         Camera camera = new Camera();
 
@@ -34,11 +39,12 @@ public class MainGameLoop {
         while(!DisplayManager.closed()) {
             DisplayManager.updateDisplayBuffers();
 
-            entity.increaseRotation(0, 0.5f, 0);
+            entity.increaseRotation(0, 0.2f, 0);
             camera.move();
             renderer.prepare();
             // game logic
             shader.start();
+            shader.loadLight(light);
             shader.loadViewMatrix(camera);
             renderer.render(entity, shader);
             shader.stop();
