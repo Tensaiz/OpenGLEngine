@@ -19,35 +19,33 @@ public class MainGameLoop {
         DisplayManager.createDisplay();
 
         Loader loader = new Loader();
-        StaticShader shader = new StaticShader();
-        Renderer renderer = new Renderer(shader);
 
-        RawModel model = OBJLoader.loadObjModel("dragon", loader);
-        TexturedModel staticModel = new TexturedModel(model, new ModelTexture(loader.loadTexture("white")));
+
+
+        RawModel model = OBJLoader.loadObjModel("stall", loader);
+        TexturedModel staticModel = new TexturedModel(model, new ModelTexture(loader.loadTexture("stallTexture")));
         ModelTexture texture = staticModel.getTexture();
         texture.setShineDamper(10);
         texture.setReflectivity(1);
 
-        Entity entity = new Entity(staticModel, new Vector3f(0, -5, -25), 0,0,0,1);
-        Light light = new Light(new Vector3f(0,-5, -15), new Vector3f(1, 1, 1));
+        Entity entity = new Entity(staticModel, new Vector3f(0, -2.5f, -25), 0,0,0,1);
+        Light light = new Light(new Vector3f(0,0, -20), new Vector3f(1, 1, 1));
 
 
         Camera camera = new Camera();
 
         Sync sync = new Sync();
 
+        MasterRenderer renderer = new MasterRenderer();
+
         while(!DisplayManager.closed()) {
             DisplayManager.updateDisplayBuffers();
 
             entity.increaseRotation(0, 0.2f, 0);
             camera.move();
-            renderer.prepare();
-            // game logic
-            shader.start();
-            shader.loadLight(light);
-            shader.loadViewMatrix(camera);
-            renderer.render(entity, shader);
-            shader.stop();
+
+            renderer.processEntity(entity);
+            renderer.render(light, camera);
 
             // FPS sync
             sync.sync(144);
@@ -56,7 +54,7 @@ public class MainGameLoop {
             DisplayManager.updateDisplayEvents();
         }
 
-        shader.cleanUp();
+        renderer.cleanUp();
         loader.cleanUp();
         DisplayManager.closeDisplay();
 
