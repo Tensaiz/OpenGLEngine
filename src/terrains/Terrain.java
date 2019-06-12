@@ -18,6 +18,23 @@ public class Terrain {
         this.texture = texture;
         this.x = gridX * SIZE;
         this.z = gridZ * SIZE;
+        this.model = generateTerrain(loader);
+    }
+
+    public float getX() {
+        return x;
+    }
+
+    public float getZ() {
+        return z;
+    }
+
+    public RawModel getModel() {
+        return model;
+    }
+
+    public ModelTexture getTexture() {
+        return texture;
     }
 
     private RawModel generateTerrain(Loader loader){
