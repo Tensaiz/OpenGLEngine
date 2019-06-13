@@ -11,6 +11,9 @@ public class DisplayManager {
     private static final int WIDTH = 1280;
     private static final int HEIGHT = 720;
 
+    private static long lastFrameTime;
+    private static float delta;
+
     public static void createDisplay() {
         if (!GLFW.glfwInit()) {
             System.err.println("Error: Couldn't create GLFW window");
@@ -27,6 +30,7 @@ public class DisplayManager {
         GLFW.glfwMakeContextCurrent(window);
         GLFW.glfwShowWindow(window);
         GL.createCapabilities();
+        lastFrameTime = getCurrentTime();
     }
 
     public static void updateDisplayBuffers() {
@@ -35,6 +39,13 @@ public class DisplayManager {
 
     public static void updateDisplayEvents() {
         GLFW.glfwPollEvents();
+        long currentFrameTime = getCurrentTime();
+        delta = (currentFrameTime - lastFrameTime)/1000f;
+        lastFrameTime = getCurrentTime();
+    }
+
+    public static float getFrameTimeSeconds() {
+        return delta;
     }
 
     public static void closeDisplay() {
@@ -60,6 +71,10 @@ public class DisplayManager {
 
     public static int getHeight() {
         return HEIGHT;
+    }
+
+    private static long getCurrentTime() {
+        return System.currentTimeMillis();
     }
 
 }

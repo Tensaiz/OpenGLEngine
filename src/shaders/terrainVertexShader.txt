@@ -17,14 +17,14 @@ uniform vec3 lightPosition;
 
 uniform float useFakeLighting;
 
-const float density = 0.007;
-const float gradient = 2.5;
+const float density = 0.0037;
+const float gradient = 5;
 
 void main(void) {
     vec4 worldPosition = transformationMatrix * vec4(position, 1.0);
     vec4 positionRelativeToCam = viewMatrix * worldPosition;
     gl_Position = projectionMatrix * viewMatrix * worldPosition;
-    pass_textureCoords = textureCoords * 40;
+    pass_textureCoords = textureCoords;
 
     surfaceNormal = (transformationMatrix * vec4(normal, 0.0)).xyz;
     toLightVector = lightPosition - worldPosition.xyz;
