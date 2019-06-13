@@ -72,8 +72,6 @@ public class MainGameLoop {
         Terrain terrain = new Terrain(0, -1, loader, texturePack, blendMap);
         Terrain terrain2 = new Terrain(-1, -1, loader, texturePack, blendMap);
 
-        Camera camera = new Camera();
-
         Sync sync = new Sync();
 
         MasterRenderer renderer = new MasterRenderer();
@@ -84,6 +82,8 @@ public class MainGameLoop {
         ));
 
         Player player = new Player(stanfordBunny, new Vector3f(100, 0, -50), 0,0 ,0 , 1);
+
+        Camera camera = new Camera(player);
 
         while(!DisplayManager.closed()) {
             DisplayManager.updateDisplayBuffers();
